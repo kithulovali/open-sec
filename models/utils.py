@@ -1,19 +1,16 @@
-from sqlalchemy.orm import DeclarativeBase 
-from users import User
-from cards import Card 
-from datetime import datetime 
-from sqlalchemy.orm import Mapped , mapped_column , relationship 
-from sqlalchemy import DateTime , func  , String , Text , Uuid
+
 import uuid
-from doors import Door
+from settings import Model
+from sqlalchemy.orm import Mapped , mapped_column , relationship 
+from sqlalchemy import  String , Text , Uuid
+from models.shared import TimeStamp
+from typing import TYPE_CHECKING 
 
-class Model(DeclarativeBase):
-    pass 
+if TYPE_CHECKING :
+    from models.users import User
+    from models.cards import Card 
+    from models.doors import Door    
 
-class TimeStamp:
-    created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now()) 
-    created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now()) 
-    
     
 class UserRole(Model,TimeStamp):
     __tablename__ = "roles"
@@ -23,6 +20,7 @@ class UserRole(Model,TimeStamp):
     description : Mapped[str] = mapped_column(Text)
     
     user : Mapped["User"] = relationship(
+        "User",
         back_populates="role"
     ) 
     
@@ -34,6 +32,7 @@ class Gender(Model , TimeStamp):
     name : Mapped[str] = mapped_column(String(32), nullable=True, unique=True)
     
     user : Mapped["User"] = relationship(
+        "User",
         back_populates="gender"
     ) 
 
@@ -46,6 +45,7 @@ class CardStatus(Model , TimeStamp):
     description : Mapped[str] = mapped_column(Text)
     
     card : Mapped["Card"] = relationship(
+        "Card",
         back_populates="status"
     )
     
@@ -59,6 +59,7 @@ class UserStatus(Model , TimeStamp):
     description: Mapped[str] = mapped_column(Text)
     
     user : Mapped["User"] = relationship(
+        "User",
         back_populates="status"
     )
     
@@ -74,6 +75,7 @@ class AccessLevel(Model , TimeStamp):
         )
     
     door : Mapped["Door"] = relationship(
+        "Door",
         back_populates="access"
     )
     
@@ -84,9 +86,11 @@ class CardQr(Model , TimeStamp):
     id : Mapped[uuid.UUID] = mapped_column(Uuid , primary_key=True , unique=True ,nullable=False)
     
     user : Mapped["User"]  = relationship(
+        "User",
         back_populates="qr_code"
         )
     
     card : Mapped["Card"] = relationship(
+        "Card",
         back_populates="qr_code"
         )

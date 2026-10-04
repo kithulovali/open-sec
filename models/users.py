@@ -1,9 +1,16 @@
+
 import uuid 
-from utils import TimeStamp , UserRole , Gender , UserStatus , Model
 from sqlalchemy.orm import Mapped , mapped_column , relationship 
 from sqlalchemy import String , Uuid , Integer , ForeignKey
-from typing import List
-from cards import Card 
+from models.shared import TimeStamp
+from settings import Model 
+from typing import TYPE_CHECKING , List
+
+
+if TYPE_CHECKING :
+    from models.utils import  UserRole , Gender , UserStatus 
+    from models.cards import Card 
+    
 
 class User(Model, TimeStamp):
     
@@ -22,18 +29,23 @@ class User(Model, TimeStamp):
     
     
     role : Mapped["UserRole"] = relationship(
+        "UserRole",
         back_populates="user"
     )
     
     gender : Mapped["Gender"] = relationship(
+        "Gender",
         back_populates="user"
+        
         )
     
     card : Mapped["Card"] = relationship(
+        "Card",
         back_populates="owner"
     )
     
     status : Mapped["UserStatus"] = relationship(
+        "UserStatus",
         back_populates="status"
     )
     
