@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped , mapped_column , relationship
 from sqlalchemy import String , Uuid , Integer , ForeignKey
 from models.shared import TimeStamp
 from settings import Model 
-from typing import TYPE_CHECKING , List
+from typing import TYPE_CHECKING 
 
 
 if TYPE_CHECKING :
@@ -20,11 +20,10 @@ class User(Model, TimeStamp):
     public_id : Mapped[uuid.UUID] = mapped_column(Uuid , unique=True ,default=uuid.uuid4)
     name : Mapped[str] = mapped_column(String(32),nullable=False)
     email : Mapped[str] = mapped_column(String(256),nullable=False , unique=True)
-    contact : Mapped[List[int]] = mapped_column(Integer)
+    contact : Mapped[int] = mapped_column(Integer)
     
     gender_id : Mapped[str] = mapped_column(ForeignKey("genders.id"))
     role_id : Mapped[int] = mapped_column(ForeignKey("roles.id"))
-    card_id : Mapped[uuid.UUID] = mapped_column(ForeignKey("cards.id"))
     status_id : Mapped[int] = mapped_column(ForeignKey("user_status.id"))
     
     
@@ -39,14 +38,14 @@ class User(Model, TimeStamp):
         
         )
     
-    card : Mapped["Card"] = relationship(
+    cards : Mapped["Card"] = relationship(
         "Card",
-        back_populates="owner"
+        back_populates="user"
     )
     
     status : Mapped["UserStatus"] = relationship(
         "UserStatus",
-        back_populates="status"
+        back_populates="user"
     )
     
   

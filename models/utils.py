@@ -1,8 +1,7 @@
 
-import uuid
 from settings import Model
 from sqlalchemy.orm import Mapped , mapped_column , relationship 
-from sqlalchemy import  String , Text , Uuid
+from sqlalchemy import  String , Text 
 from models.shared import TimeStamp
 from typing import TYPE_CHECKING 
 
@@ -64,33 +63,20 @@ class UserStatus(Model , TimeStamp):
     )
     
 class AccessLevel(Model , TimeStamp):
+    
     __tablename__="access_levels"
     
     id : Mapped[int] = mapped_column(primary_key=True , unique=True ,nullable=True)
     name : Mapped[str] = mapped_column(String(32),nullable=True , unique=True)
     description : Mapped[str] = mapped_column(Text)
     
-    card : Mapped["Card"] = relationship(
+    cards : Mapped["Card"] = relationship(
+        "Card",
         back_populates="access"
         )
     
-    door : Mapped["Door"] = relationship(
+    doors : Mapped["Door"] = relationship(
         "Door",
         back_populates="access"
     )
     
-class CardQr(Model , TimeStamp):
-    
-    __tablename__="qr_codes"
-    
-    id : Mapped[uuid.UUID] = mapped_column(Uuid , primary_key=True , unique=True ,nullable=False)
-    
-    user : Mapped["User"]  = relationship(
-        "User",
-        back_populates="qr_code"
-        )
-    
-    card : Mapped["Card"] = relationship(
-        "Card",
-        back_populates="qr_code"
-        )
