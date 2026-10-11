@@ -13,7 +13,7 @@ class Model(DeclarativeBase):
 
 engine = create_engine(
         DATABASE_URL ,
-        echo = True 
+        echo = False
 )
 
 sessionlocal = sessionmaker(
